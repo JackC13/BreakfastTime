@@ -1,692 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>早餐店菜單</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-primary: #FAFAFA;
-            --bg-card: #FFFFFF;
-            --text-primary: #1A1A1A;
-            --text-secondary: #666666;
-            --text-muted: #999999;
-            --accent-daily: #E85D24;
-            --accent-mwd: #2563EB;
-            --accent-qburger: #DC2626;
-            --accent-maoshi: #059669;
-            --border-color: #EEEEEE;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>早餐店菜單</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Outfit:wght@400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header class="header">
+            <h1>🍳 早餐店菜單</h1>
+            <p>達利早餐 · 麥味登 · Q Burger · 卯時早午餐</p>
+        </header>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        <div class="store-tabs-wrapper">
+            <nav class="store-tabs" id="storeTabs"></nav>
+        </div>
 
-        body {
-            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
+        <section class="store-info" id="storeInfo"></section>
 
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2.5rem 1.5rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+        <div class="search-bar-wrapper">
+            <div class="search-bar">
+                <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="搜尋餐點名稱..."
+                    autocomplete="off"
+                />
+                <button
+                    class="search-clear"
+                    id="searchClear"
+                    onclick="clearSearch()"
+                >
+                    ✕
+                </button>
+            </div>
+        </div>
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
+        <div class="filter-row">
+            <nav class="category-filter" id="categoryFilter"></nav>
+            <div class="price-filter" id="priceFilter"></div>
+        </div>
 
-        .header h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-            position: relative;
-            z-index: 1;
-            letter-spacing: -0.5px;
-        }
+        <main class="menu-container">
+            <div id="searchResultInfo"></div>
+            <div id="menuContent"></div>
+        </main>
 
-        .header p {
-            color: rgba(255,255,255,0.85);
-            margin-top: 0.5rem;
-            font-size: 0.95rem;
-            position: relative;
-            z-index: 1;
-        }
+        <footer class="footer">
+            <p>菜單價格僅供參考，實際以店家公告為準</p>
+            <p style="margin-top: 0.5rem">
+                <a href="https://dailybreakfast.com.tw" target="_blank"
+                    >達利早餐官網</a
+                >
+                ·
+                <a href="https://www.qburger.com.tw" target="_blank"
+                    >Q Burger官網</a
+                >
+            </p>
+        </footer>
 
-        /* Store Tabs */
-        .store-tabs-wrapper {
-            background: white;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow-sm);
-        }
+        <script src="data.js"></script>
+        <script>
+            // ============================================
+            // 程式邏輯
+            // ============================================
+            let currentStore = stores[0];
+            let currentCategory = "all";
+            let currentPriceFilter = "all";
+            let popularOnly = false;
+            let searchQuery = "";
 
-        .store-tabs {
-            display: flex;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0.75rem 1rem;
-            gap: 0.5rem;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
+            const PRICE_FILTERS = [
+                { id: "all", label: "所有價位" },
+                { id: "under50", label: "$50 以下", fn: (p) => p <= 50 },
+                {
+                    id: "50to100",
+                    label: "$51–100",
+                    fn: (p) => p > 50 && p <= 100,
+                },
+                { id: "over100", label: "$100 以上", fn: (p) => p > 100 },
+            ];
 
-        .store-tabs::-webkit-scrollbar {
-            display: none;
-        }
+            function init() {
+                renderStoreTabs();
+                renderStoreInfo();
+                renderCategoryFilter();
+                renderPriceFilter();
+                renderMenu();
 
-        .store-tab {
-            flex: 1;
-            min-width: 100px;
-            padding: 0.75rem 1rem;
-            border: none;
-            border-radius: var(--radius-md);
-            background: var(--bg-primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-            text-align: center;
-        }
-
-        .store-tab:hover {
-            background: #f0f0f0;
-        }
-
-        .store-tab.active {
-            color: white;
-            transform: scale(1.02);
-        }
-
-        .store-tab.active[data-store="daily"] {
-            background: var(--accent-daily);
-        }
-
-        .store-tab.active[data-store="mwd"] {
-            background: var(--accent-mwd);
-        }
-
-        .store-tab.active[data-store="qburger"] {
-            background: var(--accent-qburger);
-        }
-
-        .store-tab.active[data-store="maoshi"] {
-            background: var(--accent-maoshi);
-        }
-
-        /* Store Info */
-        .store-info {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 1.25rem 1.5rem;
-            background: white;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .store-info h2 {
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .store-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.6rem;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: white;
-        }
-
-        .store-badge.daily { background: var(--accent-daily); }
-        .store-badge.mwd { background: var(--accent-mwd); }
-        .store-badge.qburger { background: var(--accent-qburger); }
-        .store-badge.maoshi { background: var(--accent-maoshi); }
-
-        .store-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .store-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        /* Category Filter */
-        .category-filter {
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0.5rem;
-            padding: 1rem 1.5rem;
-            overflow-x: auto;
-            scrollbar-width: none;
-            background: white;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .category-filter::-webkit-scrollbar {
-            display: none;
-        }
-
-        .category-btn {
-            flex-shrink: 0;
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            background: white;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .category-btn:hover {
-            border-color: var(--text-secondary);
-        }
-
-        .category-btn.active {
-            background: var(--text-primary);
-            border-color: var(--text-primary);
-            color: white;
-        }
-
-        /* Menu Container */
-        .menu-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 1rem 1.5rem 2rem;
-            background: var(--bg-primary);
-        }
-
-        /* Section Title */
-        .section-title {
-            font-size: 1rem;
-            font-weight: 700;
-            padding: 1.25rem 0 0.75rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Menu List */
-        .menu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .menu-item {
-            background: white;
-            border-radius: var(--radius-md);
-            padding: 1rem 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .menu-item:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-1px);
-        }
-
-        .menu-item.popular::after {
-            content: '🔥';
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            font-size: 1rem;
-        }
-
-        .menu-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .menu-item-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 0.15rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .menu-item-desc {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .menu-item-price {
-            font-size: 1.1rem;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .menu-item-price.daily { color: var(--accent-daily); }
-        .menu-item-price.mwd { color: var(--accent-mwd); }
-        .menu-item-price.qburger { color: var(--accent-qburger); }
-        .menu-item-price.maoshi { color: var(--accent-maoshi); }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 2rem 1.5rem;
-            background: white;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .footer a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        /* Animation */
-        .fade-in {
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.6rem;
+                const input = document.getElementById("searchInput");
+                input.addEventListener("input", () => {
+                    searchQuery = input.value.trim();
+                    document
+                        .getElementById("searchClear")
+                        .classList.toggle("visible", searchQuery.length > 0);
+                    renderMenu();
+                });
             }
 
-            .store-info h2 {
-                font-size: 1.2rem;
+            function clearSearch() {
+                searchQuery = "";
+                document.getElementById("searchInput").value = "";
+                document
+                    .getElementById("searchClear")
+                    .classList.remove("visible");
+                renderMenu();
             }
 
-            .menu-item {
-                padding: 0.875rem 1rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header class="header">
-        <h1>🍳 早餐店菜單</h1>
-        <p>達利早餐 · 麥味登 · Q Burger · 卯時早午餐</p>
-    </header>
-
-    <div class="store-tabs-wrapper">
-        <nav class="store-tabs" id="storeTabs"></nav>
-    </div>
-
-    <section class="store-info" id="storeInfo"></section>
-
-    <nav class="category-filter" id="categoryFilter"></nav>
-
-    <main class="menu-container">
-        <div id="menuContent"></div>
-    </main>
-
-    <footer class="footer">
-        <p>菜單價格僅供參考，實際以店家公告為準</p>
-        <p style="margin-top: 0.5rem;">
-            <a href="https://dailybreakfast.com.tw" target="_blank">達利早餐官網</a> · 
-            <a href="https://www.qburger.com.tw" target="_blank">Q Burger官網</a>
-        </p>
-    </footer>
-
-    <script>
-        // ============================================
-        // 📝 早餐店資料
-        // ============================================
-        const stores = [
-            {
-                id: 'daily',
-                name: '達利早餐',
-                badge: '連鎖品牌',
-                address: '新北市三重區光復路一段68巷7號（總部）',
-                hours: '06:00 - 14:00',
-                phone: '(02) 2228-9570',
-                website: 'https://dailybreakfast.com.tw',
-                menu: {
-                    '🥚 蛋餅系列': [
-                        { name: '原味蛋餅', price: 35 },
-                        { name: '起士蛋餅', price: 45 },
-                        { name: '玉米蛋餅', price: 45 },
-                        { name: '火腿蛋餅', price: 40 },
-                        { name: '鮪魚蛋餅', price: 55 },
-                        { name: '培根蛋餅', price: 50 },
-                        { name: '里肌豬排蛋餅', price: 60, popular: true },
-                        { name: '拉絲蛋餅', price: 55, popular: true },
-                        { name: '薯餅起士蛋餅', price: 65 },
-                        { name: '厚蛋蔥香蛋餅', price: 55 },
-                    ],
-                    '🍔 鮮奶漢堡': [
-                        { name: '經典牛肉起士堡', price: 75, popular: true },
-                        { name: 'BBQ雞腿排漢堡', price: 85, popular: true },
-                        { name: '里肌豬排漢堡', price: 65 },
-                        { name: '鮪魚起士漢堡', price: 70 },
-                        { name: '培根蛋漢堡', price: 60 },
-                    ],
-                    '🥪 吐司系列': [
-                        { name: '里肌豬排吐司', price: 55 },
-                        { name: '經典蛋沙拉吐司', price: 55, popular: true },
-                        { name: '里肌總匯吐司', price: 75 },
-                        { name: '鮪魚起士吐司', price: 60 },
-                        { name: '肉鬆蛋吐司', price: 45 },
-                    ],
-                    '🥐 鹽可頌 / 黑麥歐包': [
-                        { name: '鮮蝦蛋沙拉鹽可頌', price: 95, popular: true },
-                        { name: '燻鮭魚鹽可頌', price: 95 },
-                        { name: '起士蛋鹽可頌', price: 65 },
-                        { name: '黑麥歐包套餐', price: 145 },
-                    ],
-                    '🍝 鐵板麵 / 烏龍': [
-                        { name: '蘑菇鐵板麵COMBO', price: 95 },
-                        { name: '黑胡椒鐵板麵COMBO', price: 95 },
-                        { name: '招牌和風炒烏龍', price: 130, popular: true },
-                        { name: '家傳椒麻炒烏龍', price: 140 },
-                        { name: '招牌和風湯烏龍', price: 145 },
-                    ],
-                    '🍳 總匯套餐': [
-                        { name: 'BBQ雞腿排總匯套餐', price: 145, popular: true },
-                        { name: '里肌總匯套餐', price: 125 },
-                        { name: '經典法式雞腿集合', price: 185 },
-                    ],
-                    '🥗 水耕沙拉': [
-                        { name: '嫩煎雞胸水耕沙拉', price: 165, popular: true },
-                        { name: '燻鮭魚水耕沙拉', price: 185 },
-                    ],
-                    '🧇 墨西哥捲 / 鬆餅': [
-                        { name: '蜜焰卡啦雞捲', price: 95 },
-                        { name: '檸檬優格雞胸捲', price: 95, popular: true },
-                        { name: '英式圓鬆餅', price: 55 },
-                    ],
-                    '☕ 飲料 / 咖啡': [
-                        { name: '達利秘製奶茶', price: 40, popular: true },
-                        { name: '達利嚴選紅茶', price: 25 },
-                        { name: '鮮奶茶', price: 50 },
-                        { name: '招牌拿鐵 (大)', price: 70, popular: true },
-                        { name: '美式咖啡', price: 50 },
-                        { name: '豆漿', price: 25 },
-                    ],
-                }
-            },
-            {
-                id: 'mwd',
-                name: '麥味登',
-                badge: '五股中興店',
-                address: '新北市五股區中興路四段48巷1號1樓',
-                hours: '06:30 - 15:30',
-                phone: '',
-                website: '',
-                menu: {
-                    '🍔 漢堡系列': [
-                        { name: '卡滋雞腿漢堡', price: 85, popular: true },
-                        { name: '超厚牛肉起司漢堡', price: 90, popular: true },
-                        { name: '豬肉起司漢堡', price: 55 },
-                        { name: '雞肉起司漢堡', price: 60 },
-                        { name: '鮪魚起司漢堡', price: 60 },
-                    ],
-                    '🧇 滿分堡系列': [
-                        { name: '豬肉起司滿分堡', price: 60, popular: true },
-                        { name: '原塊嫩雞起司滿分堡', price: 95, popular: true },
-                        { name: '超厚雞肉起司滿分堡', price: 75 },
-                        { name: '花生厚牛起司滿分堡', price: 90 },
-                        { name: '培根蛋滿分堡', price: 55 },
-                    ],
-                    '🥐 可頌 / 丹麥': [
-                        { name: '燻雞可頌', price: 75, popular: true },
-                        { name: '起司蛋可頌', price: 55 },
-                        { name: '鮪魚丹麥', price: 65 },
-                    ],
-                    '🥚 蛋餅系列': [
-                        { name: '手工蔥抓蛋餅', price: 55, popular: true },
-                        { name: '豬里肌握蛋捲餅', price: 85, popular: true },
-                        { name: '起司蛋餅', price: 40 },
-                        { name: '玉米蛋餅', price: 40 },
-                        { name: '培根蛋餅', price: 45 },
-                    ],
-                    '🍝 鐵板麵系列': [
-                        { name: '蘑菇鐵板麵', price: 60, popular: true },
-                        { name: '黑胡椒鐵板麵', price: 60, popular: true },
-                        { name: '眷村麻醬鐵板麵 (含蛋)', price: 70 },
-                        { name: '川味麻辣鐵板麵 (含蛋)', price: 70 },
-                    ],
-                    '🥟 點心系列': [
-                        { name: '黃金泡菜酥炸餃', price: 55, popular: true },
-                        { name: '黃金泡菜蘿蔔糕', price: 60 },
-                        { name: '薯餅蛋塔', price: 55, popular: true },
-                        { name: '雞塊 (6入)', price: 50 },
-                    ],
-                    '🍳 早午餐特餐': [
-                        { name: '法式特餐', price: 150, popular: true },
-                        { name: '地瓜雞肉餐', price: 190, popular: true },
-                    ],
-                    '☕ 咖啡飲品': [
-                        { name: '熱拿鐵咖啡', price: 65, popular: true },
-                        { name: '熱美式咖啡', price: 55 },
-                        { name: '冰拿鐵咖啡', price: 65 },
-                        { name: '冰美式咖啡', price: 55 },
-                        { name: '紅茶', price: 25 },
-                        { name: '奶茶', price: 35 },
-                        { name: '豆漿', price: 25 },
-                    ],
-                }
-            },
-            {
-                id: 'qburger',
-                name: 'Q Burger',
-                badge: '饗樂餐飲',
-                address: '全台超過350家門市',
-                hours: '06:00 - 14:00（依門市為準）',
-                phone: '',
-                website: 'https://www.qburger.com.tw',
-                menu: {
-                    '🍔 漢堡系列': [
-                        { name: '卡啦雞腿堡', price: 75, popular: true },
-                        { name: '費城起士牛肉潛艇堡', price: 95, popular: true },
-                        { name: '嫩脆雞胸堡', price: 70 },
-                        { name: '豬排起士堡', price: 60 },
-                        { name: '鮪魚起士堡', price: 65 },
-                    ],
-                    '🥪 吐司系列': [
-                        { name: '肉鬆花生蛋吐司', price: 50, popular: true },
-                        { name: '培根蛋吐司', price: 45 },
-                        { name: '鮪魚起士吐司', price: 55 },
-                        { name: '火腿蛋吐司', price: 40 },
-                        { name: '總匯吐司', price: 65 },
-                    ],
-                    '🥐 布里歐系列（韓國站）': [
-                        { name: '洋釀脆雞腿布里歐吐司', price: 95, popular: true },
-                        { name: '嫩蛋起士布里歐吐司', price: 55 },
-                    ],
-                    '🥚 蛋餅系列': [
-                        { name: '里肌豬排蛋餅', price: 55, popular: true },
-                        { name: '起士蛋餅', price: 40 },
-                        { name: '玉米蛋餅', price: 40 },
-                        { name: '培根蛋餅', price: 45 },
-                        { name: '鮪魚蛋餅', price: 50 },
-                    ],
-                    '🌯 墨西哥捲': [
-                        { name: '嫩脆雞胸墨西哥捲', price: 85, popular: true },
-                        { name: '燻雞墨西哥捲', price: 75 },
-                    ],
-                    '🍜 鍋燒麵 / 泡麵': [
-                        { name: '里肌豬排鍋燒麵 (意麵)', price: 95, popular: true },
-                        { name: '里肌豬排鍋燒麵 (烏龍麵)', price: 95 },
-                        { name: '韓式辣炒起士泡麵', price: 75, popular: true },
-                    ],
-                    '🍟 點心炸物': [
-                        { name: '鹹酥雞', price: 60, popular: true },
-                        { name: '洋釀脆雞球', price: 55, popular: true },
-                        { name: '手工甜不辣', price: 50 },
-                        { name: '鹹酥雞三拼', price: 99 },
-                        { name: '台農57號地瓜薯', price: 45 },
-                    ],
-                    '🥗 軟法 / 沙拉': [
-                        { name: '鮪魚起士軟法', price: 65 },
-                        { name: '燻雞軟法', price: 65 },
-                    ],
-                    '☕ 飲料': [
-                        { name: '紅茶 (大)', price: 25 },
-                        { name: '奶茶 (大)', price: 35, popular: true },
-                        { name: '豆漿', price: 25 },
-                        { name: '草莓牛奶', price: 50 },
-                        { name: '柚香四季春', price: 40 },
-                        { name: '美式咖啡', price: 45 },
-                        { name: '拿鐵咖啡', price: 55 },
-                    ],
-                }
-            },
-            {
-                id: 'maoshi',
-                name: '卯時早午餐',
-                badge: '4.9 ⭐ 高評價',
-                address: '新北市五股區芳洲一路28號',
-                hours: '07:00 - 13:00',
-                phone: '',
-                website: '',
-                menu: {
-                    '🍜 卯時炒麵': [
-                        { name: '碳烤雞腿炒麵', desc: '含煎蛋，獨門醬汁', price: 130, popular: true },
-                        { name: '無骨黃金雞排炒麵', desc: '含煎蛋', price: 125, popular: true },
-                        { name: '辣味卡拉雞腿炒麵', desc: '含煎蛋', price: 130, popular: true },
-                        { name: '起司藍帶豬排炒麵', desc: '含煎蛋', price: 125 },
-                        { name: '厚切菲力雞排炒麵', desc: '含煎蛋', price: 125 },
-                        { name: '酥炸大阪豬排炒麵', desc: '台灣豬肉', price: 125 },
-                        { name: '豬排炒麵', desc: '台灣豬肉', price: 110 },
-                        { name: '檸檬雞柳炒麵', desc: '含煎蛋', price: 110 },
-                        { name: '德式香腸炒麵', desc: '含煎蛋', price: 110 },
-                        { name: '招牌炒麵', desc: '含煎蛋', price: 75 },
-                    ],
-                    '🍝 風味炒麵': [
-                        { name: '咖喱烏龍麵', price: 70 },
-                        { name: '番茄肉醬義大利麵', price: 70 },
-                        { name: '塔香三杯雞炒麵', price: 70 },
-                        { name: '宮保雞丁炒麵', price: 70 },
-                        { name: '泰式打拋豬炒麵', price: 70 },
-                    ],
-                    '🥪 吐司 / 漢堡': [
-                        { name: '碳烤雞腿蛋', price: 95, popular: true },
-                        { name: '無骨黃金雞排堡', price: 90 },
-                        { name: '起司藍帶豬排堡', price: 90 },
-                        { name: '厚切菲力雞排堡', price: 90 },
-                        { name: '培根蛋吐司', price: 50 },
-                        { name: '火腿蛋吐司', price: 45 },
-                    ],
-                    '🧇 厚片 / 鬆餅': [
-                        { name: '原味美式小鬆餅', desc: '2片', price: 40, popular: true },
-                        { name: '美式果醬小鬆餅', price: 50 },
-                        { name: '日式炒麵麵包', price: 85 },
-                        { name: '美式大熱狗堡', price: 80 },
-                    ],
-                    '🥚 手工酥皮蛋捲餅': [
-                        { name: '原味蛋捲餅', price: 40 },
-                        { name: '起司蛋捲餅', price: 50 },
-                        { name: '培根蛋捲餅', price: 55 },
-                        { name: '火腿蛋捲餅', price: 50 },
-                        { name: '鮪魚蛋捲餅', price: 55 },
-                    ],
-                    '🥟 卯時單品': [
-                        { name: '三杯蘿蔔糕', price: 65, popular: true },
-                        { name: '辣味雞塊', price: 60 },
-                        { name: '薯餅', price: 25 },
-                        { name: '雞塊 (6入)', price: 50 },
-                        { name: '荷包蛋', price: 15 },
-                    ],
-                    '🧀 乳酪餅': [
-                        { name: '原味乳酪餅', price: 45 },
-                        { name: '火腿乳酪餅', price: 55 },
-                        { name: '培根乳酪餅', price: 60 },
-                    ],
-                    '☕ 飲料': [
-                        { name: '凍檸茶', price: 50, popular: true },
-                        { name: '紅茶', price: 20 },
-                        { name: '奶茶', price: 30 },
-                        { name: '豆漿', price: 25 },
-                        { name: '米漿', price: 25 },
-                        { name: '美式咖啡', price: 40 },
-                        { name: '拿鐵咖啡', price: 50 },
-                    ],
-                }
-            },
-        ];
-
-        // ============================================
-        // 程式邏輯
-        // ============================================
-        let currentStore = stores[0];
-        let currentCategory = 'all';
-
-        function init() {
-            renderStoreTabs();
-            renderStoreInfo();
-            renderCategoryFilter();
-            renderMenu();
-        }
-
-        function renderStoreTabs() {
-            const container = document.getElementById('storeTabs');
-            container.innerHTML = stores.map(store => `
-                <button class="store-tab ${store.id === currentStore.id ? 'active' : ''}" 
+            function renderStoreTabs() {
+                const container = document.getElementById("storeTabs");
+                container.innerHTML = stores
+                    .map(
+                        (store) => `
+                <button class="store-tab ${store.id === currentStore.id ? "active" : ""}"
                         data-store="${store.id}"
                         onclick="switchStore('${store.id}')">
                     ${store.name}
                 </button>
-            `).join('');
-        }
+            `,
+                    )
+                    .join("");
+            }
 
-        function renderStoreInfo() {
-            const container = document.getElementById('storeInfo');
-            container.innerHTML = `
+            function renderStoreInfo() {
+                const container = document.getElementById("storeInfo");
+                container.innerHTML = `
                 <h2>
                     ${currentStore.name}
                     <span class="store-badge ${currentStore.id}">${currentStore.badge}</span>
@@ -694,73 +151,158 @@
                 <div class="store-meta">
                     <span>📍 ${currentStore.address}</span>
                     <span>🕐 ${currentStore.hours}</span>
-                    ${currentStore.phone ? `<span>📞 ${currentStore.phone}</span>` : ''}
+                    ${currentStore.phone ? `<span>📞 ${currentStore.phone}</span>` : ""}
                 </div>
             `;
-            container.classList.add('fade-in');
-        }
+                container.classList.add("fade-in");
+            }
 
-        function renderCategoryFilter() {
-            const categories = Object.keys(currentStore.menu);
-            const container = document.getElementById('categoryFilter');
-            container.innerHTML = `
-                <button class="category-btn ${currentCategory === 'all' ? 'active' : ''}" 
-                        onclick="filterCategory('all')">
-                    全部
-                </button>
-                ${categories.map(cat => `
-                    <button class="category-btn ${currentCategory === cat ? 'active' : ''}" 
+            function renderCategoryFilter() {
+                const categories = Object.keys(currentStore.menu);
+                const container = document.getElementById("categoryFilter");
+                container.innerHTML = `
+                <button class="category-btn ${currentCategory === "all" ? "active" : ""}"
+                        onclick="filterCategory('all')">全部</button>
+                ${categories
+                    .map(
+                        (cat) => `
+                    <button class="category-btn ${currentCategory === cat ? "active" : ""}"
                             onclick="filterCategory('${cat}')">
-                        ${cat.replace(/^[^\s]+\s/, '')}
+                        ${cat.replace(/^[^\s]+\s/, "")}
                     </button>
-                `).join('')}
+                `,
+                    )
+                    .join("")}
+                <button class="category-btn popular-btn ${popularOnly ? "active" : ""}"
+                        onclick="togglePopular()">🔥 人氣</button>
             `;
-        }
+            }
 
-        function renderMenu() {
-            const container = document.getElementById('menuContent');
-            let html = '';
+            function renderPriceFilter() {
+                const container = document.getElementById("priceFilter");
+                container.innerHTML = PRICE_FILTERS.map(
+                    (f) => `
+                <button class="category-btn ${currentPriceFilter === f.id ? "active" : ""}"
+                        onclick="filterPrice('${f.id}')">${f.label}</button>
+            `,
+                ).join("");
+            }
 
-            const categories = currentCategory === 'all' 
-                ? Object.keys(currentStore.menu) 
-                : [currentCategory];
+            function highlightText(text, query) {
+                if (!query) return text;
+                const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                return text.replace(
+                    new RegExp(escaped, "gi"),
+                    (m) => `<span class="highlight">${m}</span>`,
+                );
+            }
 
-            categories.forEach(category => {
-                html += `<div class="section-title">${category}</div>`;
-                html += '<div class="menu-list">';
-                currentStore.menu[category].forEach(item => {
-                    html += `
-                        <div class="menu-item fade-in ${item.popular ? 'popular' : ''}">
+            function getFilteredItems(items, skipNameFilter = false) {
+                let result = items;
+                if (popularOnly) result = result.filter((i) => i.popular);
+                const priceRule = PRICE_FILTERS.find(
+                    (f) => f.id === currentPriceFilter,
+                );
+                if (priceRule && priceRule.fn)
+                    result = result.filter((i) => priceRule.fn(i.price));
+                if (searchQuery && !skipNameFilter) {
+                    const q = searchQuery.toLowerCase();
+                    result = result.filter((i) =>
+                        i.name.toLowerCase().includes(q),
+                    );
+                }
+                return result;
+            }
+
+            function renderMenu() {
+                const container = document.getElementById("menuContent");
+                const infoEl = document.getElementById("searchResultInfo");
+                let html = "";
+                let totalShown = 0;
+
+                const categories =
+                    currentCategory === "all"
+                        ? Object.keys(currentStore.menu)
+                        : [currentCategory];
+
+                const isFiltering =
+                    searchQuery || popularOnly || currentPriceFilter !== "all";
+
+                categories.forEach((category) => {
+                    const categoryMatches = searchQuery &&
+                        category.toLowerCase().includes(searchQuery.toLowerCase());
+                    // 分類標題符合時，顯示該分類所有品項（仍套用人氣/價格篩選）
+                    const items = categoryMatches
+                        ? getFilteredItems(currentStore.menu[category], true)
+                        : getFilteredItems(currentStore.menu[category]);
+                    if (isFiltering && items.length === 0) return;
+
+                    html += `<div class="section-title">${highlightText(category, searchQuery)}</div>`;
+                    html += '<div class="menu-list">';
+                    items.forEach((item) => {
+                        totalShown++;
+                        html += `
+                        <div class="menu-item fade-in ${item.popular ? "popular" : ""}">
                             <div class="menu-item-info">
-                                <div class="menu-item-name">${item.name}</div>
-                                ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ''}
+                                <div class="menu-item-name">${categoryMatches ? item.name : highlightText(item.name, searchQuery)}</div>
+                                ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ""}
                             </div>
                             <div class="menu-item-price ${currentStore.id}">$${item.price}</div>
                         </div>
                     `;
+                    });
+                    html += "</div>";
                 });
-                html += '</div>';
-            });
 
-            container.innerHTML = html;
-        }
+                if (isFiltering && totalShown === 0) {
+                    html = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <p>找不到符合條件的餐點</p>
+                    </div>
+                `;
+                    infoEl.innerHTML = "";
+                } else if (isFiltering) {
+                    infoEl.innerHTML = `<div class="search-result-info">找到 ${totalShown} 項餐點</div>`;
+                } else {
+                    infoEl.innerHTML = "";
+                }
 
-        function switchStore(storeId) {
-            currentStore = stores.find(s => s.id === storeId);
-            currentCategory = 'all';
-            renderStoreTabs();
-            renderStoreInfo();
-            renderCategoryFilter();
-            renderMenu();
-        }
+                container.innerHTML = html;
+            }
 
-        function filterCategory(category) {
-            currentCategory = category;
-            renderCategoryFilter();
-            renderMenu();
-        }
+            function switchStore(storeId) {
+                currentStore = stores.find((s) => s.id === storeId);
+                currentCategory = "all";
+                currentPriceFilter = "all";
+                popularOnly = false;
+                clearSearch();
+                renderStoreTabs();
+                renderStoreInfo();
+                renderCategoryFilter();
+                renderPriceFilter();
+                renderMenu();
+            }
 
-        init();
-    </script>
-</body>
+            function filterCategory(category) {
+                currentCategory = category;
+                renderCategoryFilter();
+                renderMenu();
+            }
+
+            function filterPrice(filterId) {
+                currentPriceFilter = filterId;
+                renderPriceFilter();
+                renderMenu();
+            }
+
+            function togglePopular() {
+                popularOnly = !popularOnly;
+                renderCategoryFilter();
+                renderMenu();
+            }
+
+            init();
+        </script>
+    </body>
 </html>
