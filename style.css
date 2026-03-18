@@ -669,6 +669,35 @@ body {
     font-size: 1.2rem;
 }
 
+/* Order Sheet Footer */
+.order-sheet-footer {
+    padding: 0.75rem 1.25rem 1.25rem;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.line-share-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #06C755;
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.8rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.line-share-btn:hover {
+    background: #05b34b;
+}
+
 .menu-item-price.daily {
     color: var(--accent-daily);
 }
