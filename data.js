@@ -180,6 +180,11 @@ const storeMwd = {
     website:
         "https://www.ubereats.com/tw/store/%E9%BA%A5%E5%91%B3%E7%99%BB-%E4%BA%94%E8%82%A1%E4%B8%AD%E8%88%88%E5%BA%97/sjeDNomJS-mtHCMiavROcA",
     menu: {
+        "✨ 新品上市": [
+            { name: "香菜炸餃", price: 70, popular: true },
+            { name: "原塊嫩雞花椰菜米", price: 165, popular: true },
+            { name: "酸菜花生滿分堡", price: 80 },
+        ],
         "🍔 漢堡系列": [
             { name: "香雞漢堡", price: 45 },
             { name: "豬肉漢堡", price: 50 },
@@ -201,6 +206,7 @@ const storeMwd = {
             { name: "超厚雞肉起司滿分堡", price: 75 },
             { name: "花生厚牛起司滿分堡", price: 90 },
             { name: "原塊嫩雞起司滿分堡", price: 95, popular: true },
+            { name: "酸菜花生滿分堡", price: 80 },
         ],
         "🥐 可頌 / 丹麥": [
             { name: "香雞可頌", price: 60 },
@@ -261,6 +267,7 @@ const storeMwd = {
             { name: "原塊嫩雞 (單片)", price: 80 },
             { name: "唐揚雞塊", price: 85 },
             { name: "酥炸杏鮑菇", price: 85 },
+            { name: "香菜炸餃 (10顆)", price: 70 },
         ],
         "🍳 早午餐特餐": [
             { name: "美式鬆餅特餐", price: 140 },
@@ -291,6 +298,7 @@ const storeMwd = {
             { name: "優蛋白蛋捲餐", price: 180 },
             { name: "地瓜雞肉餐", price: 190, popular: true },
             { name: "時蔬豆皮蛋餅特餐", price: 190 },
+            { name: "原塊嫩雞花椰菜米", price: 165 },
         ],
         "☕ 咖啡飲品": [
             { name: "熱美式咖啡", price: 55 },
@@ -393,7 +401,7 @@ const storeQburger = {
             { name: "香蘋煉乳可朗芙", price: 55 },
             { name: "花醬可朗芙", price: 50 },
             { name: "經典可朗芙", price: 45 },
-            { name: "芋見可朗芙", price: 70 }, // 新品
+            { name: "芋見可朗芙", price: 75 }, // 新品
             { name: "可芮絲經典可朗芙", price: 65 }, // 期間限定
             { name: "可芮絲蜂蜜可朗芙", price: 70 }, // 期間限定
         ],
@@ -408,6 +416,7 @@ const storeQburger = {
             { name: "九層塔蛋餅", price: 40 },
             { name: "原味蔥抓餅", price: 45 },
             { name: "塔香鹹豬肉蛋餅", price: 65 }, // 新品
+            { name: "三杯杏鮑菇蛋餅", price: 65 }, // 新品
         ],
         "🌯 墨西哥捲餅": [
             { name: "嫩脆雞胸墨西哥捲", price: 85, popular: true },
@@ -427,6 +436,8 @@ const storeQburger = {
             { name: "黑胡椒鐵板麵組合餐（含里肌豬排+蛋）", price: 110 },
             { name: "蘑菇鐵板麵組合餐（含里肌豬排+蛋）", price: 110 },
             { name: "沙茶鐵板麵組合餐（含里肌豬排+蛋）", price: 110 },
+            { name: "三杯杏鮑菇鐵板麵", price: 70 },
+            { name: "三杯杏鮑菇鐵板麵組合餐", price: 130 },
         ],
         "🍜 鍋燒麵": [
             { name: "里肌豬排鍋燒麵", price: 95, popular: true },
@@ -458,8 +469,8 @@ const storeQburger = {
             { name: "鮪魚玉米可朗芙盤餐", price: 130 },
             { name: "蜂蜜芥末卡啦雞可朗芙盤餐", price: 160 },
             { name: "QB 經典大滿足", price: 165 },
-            { name: "芋見肉鬆厚片", price: 65 },
-            { name: "芋見乳酪烤餅", price: 75 },
+            { name: "芋見肉鬆厚片", price: 55 },
+            { name: "芋見乳酪烤餅", price: 65 },
         ],
         "🍟 點心炸物": [
             { name: "鹹酥雞", price: 60, popular: true },
@@ -484,7 +495,7 @@ const storeQburger = {
             { name: "蜜香奶油烤餅", price: 40 },
             { name: "花生乳酪烤餅", price: 50 },
             { name: "瑪格麗特烤餅", price: 65 },
-            { name: "芋見乳酪烤餅", price: 75 },
+            { name: "芋見乳酪烤餅", price: 65 },
         ],
         "☕ 現磨咖啡": [
             // 拆分咖啡與飲料
