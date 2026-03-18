@@ -26,38 +26,19 @@
 
         <div class="search-bar-wrapper">
             <div class="search-bar">
-                <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
                 </svg>
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="搜尋餐點名稱..."
-                    autocomplete="off"
-                />
-                <button
-                    class="search-clear"
-                    id="searchClear"
-                    onclick="clearSearch()"
-                >
-                    ✕
-                </button>
+                <input type="text" id="searchInput" placeholder="搜尋餐點名稱..." autocomplete="off" />
+                <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
             </div>
         </div>
 
         <div class="filter-row">
             <nav class="category-filter" id="categoryFilter"></nav>
-            <div class="price-filter" id="priceFilter"></div>
         </div>
 
         <main class="menu-container">
@@ -68,15 +49,27 @@
         <footer class="footer">
             <p>菜單價格僅供參考，實際以店家公告為準</p>
             <p style="margin-top: 0.5rem">
-                <a href="https://dailybreakfast.com.tw" target="_blank"
-                    >達利早餐官網</a
-                >
+                <a href="https://dailybreakfast.com.tw" target="_blank">達利早餐官網</a>
                 ·
-                <a href="https://www.qburger.com.tw" target="_blank"
-                    >Q Burger官網</a
-                >
+                <a href="https://www.qburger.com.tw" target="_blank">Q Burger官網</a>
             </p>
         </footer>
+
+        <!-- 訂單 FAB -->
+        <button class="order-fab" id="orderFab" onclick="openOrder()" style="display:none">
+            🛒 <span class="order-fab-count" id="orderFabCount">0</span>
+        </button>
+
+        <!-- 訂單面板 -->
+        <div class="order-overlay" id="orderOverlay" onclick="closeOrder()"></div>
+        <aside class="order-sheet" id="orderSheet">
+            <div class="order-sheet-handle"></div>
+            <div class="order-sheet-header">
+                <h3>我的選單</h3>
+                <button class="order-clear-btn" onclick="clearAllOrders()">清除全部</button>
+            </div>
+            <div class="order-sheet-body" id="orderBody"></div>
+        </aside>
 
         <script src="data.js"></script>
         <script>
@@ -85,34 +78,146 @@
             // ============================================
             let currentStore = stores[0];
             let currentCategory = "all";
-            let currentPriceFilter = "all";
             let popularOnly = false;
             let searchQuery = "";
 
-            const PRICE_FILTERS = [
-                { id: "all", label: "所有價位" },
-                { id: "under50", label: "$50 以下", fn: (p) => p <= 50 },
-                {
-                    id: "50to100",
-                    label: "$51–100",
-                    fn: (p) => p > 50 && p <= 100,
-                },
-                { id: "over100", label: "$100 以上", fn: (p) => p > 100 },
-            ];
+            // orders: { [storeId::itemName]: { storeId, storeName, name, price, qty } }
+            const orders = {};
 
+            // ── 工具 ──────────────────────────────────
+            function escJS(str) {
+                return str.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+            }
+
+            function itemKey(storeId, name) {
+                return `${storeId}::${name}`;
+            }
+
+            function getQty(storeId, name) {
+                return orders[itemKey(storeId, name)]?.qty || 0;
+            }
+
+            // ── 數量控制 ──────────────────────────────
+            function renderQtyBtns(storeId, name, price, qty) {
+                const s = escJS(storeId), n = escJS(name);
+                if (qty > 0) {
+                    return `<button class="qty-btn" onclick="changeQty('${s}','${n}',${price},-1)">－</button>`
+                         + `<span class="qty-num">${qty}</span>`
+                         + `<button class="qty-btn qty-add" onclick="changeQty('${s}','${n}',${price},1)">＋</button>`;
+                }
+                return `<button class="qty-btn qty-add" onclick="changeQty('${s}','${n}',${price},1)">＋</button>`;
+            }
+
+            function changeQty(storeId, name, price, delta) {
+                const key = itemKey(storeId, name);
+                if (!orders[key]) {
+                    const store = stores.find((s) => s.id === storeId);
+                    orders[key] = { storeId, storeName: store.name, name, price, qty: 0 };
+                }
+                orders[key].qty = Math.max(0, orders[key].qty + delta);
+                if (orders[key].qty === 0) delete orders[key];
+
+                // 更新選單中的數量按鈕（不重繪整個選單）
+                const qty = getQty(storeId, name);
+                document.querySelectorAll(`.qty-control[data-key="${CSS.escape(itemKey(storeId, name))}"]`)
+                    .forEach((el) => { el.innerHTML = renderQtyBtns(storeId, name, price, qty); });
+
+                updateFab();
+
+                // 若訂單面板已開啟，即時更新
+                if (document.getElementById("orderSheet").classList.contains("open")) {
+                    renderOrderBody();
+                }
+            }
+
+            function updateFab() {
+                const total = Object.values(orders).reduce((s, o) => s + o.qty, 0);
+                const fab = document.getElementById("orderFab");
+                fab.style.display = total > 0 ? "flex" : "none";
+                document.getElementById("orderFabCount").textContent = total;
+            }
+
+            // ── 訂單面板 ──────────────────────────────
+            function openOrder() {
+                renderOrderBody();
+                document.getElementById("orderOverlay").classList.add("open");
+                document.getElementById("orderSheet").classList.add("open");
+            }
+
+            function closeOrder() {
+                document.getElementById("orderOverlay").classList.remove("open");
+                document.getElementById("orderSheet").classList.remove("open");
+            }
+
+            function clearAllOrders() {
+                Object.keys(orders).forEach((k) => delete orders[k]);
+                updateFab();
+                renderOrderBody();
+                // 清除選單上所有數量顯示
+                document.querySelectorAll(".qty-control").forEach((el) => {
+                    const { storeId, name, price } = el.dataset;
+                    el.innerHTML = renderQtyBtns(storeId, name, Number(price), 0);
+                });
+            }
+
+            function renderOrderBody() {
+                const entries = Object.values(orders).filter((o) => o.qty > 0);
+                const body = document.getElementById("orderBody");
+
+                if (entries.length === 0) {
+                    body.innerHTML = '<p class="order-empty">尚未選擇任何餐點</p>';
+                    return;
+                }
+
+                // 依店家順序分組
+                const storeOrder = stores.map((s) => s.id);
+                const byStore = {};
+                entries.forEach((e) => {
+                    if (!byStore[e.storeId]) byStore[e.storeId] = { name: e.storeName, items: [] };
+                    byStore[e.storeId].items.push(e);
+                });
+
+                let html = "";
+                let grand = 0;
+
+                storeOrder.filter((id) => byStore[id]).forEach((id) => {
+                    const { name, items } = byStore[id];
+                    const sub = items.reduce((s, i) => s + i.price * i.qty, 0);
+                    grand += sub;
+                    html += `
+                        <div class="order-section">
+                            <div class="order-section-header">
+                                <span class="store-badge ${id}">${name}</span>
+                                <span class="order-sub">$${sub}</span>
+                            </div>
+                            ${items.map((i) => `
+                            <div class="order-row">
+                                <span class="order-row-name">${i.name}</span>
+                                <div class="order-row-right">
+                                    <div class="qty-control order-qty" data-key="${itemKey(i.storeId, i.name)}" data-store-id="${i.storeId}" data-name="${i.name}" data-price="${i.price}">
+                                        ${renderQtyBtns(i.storeId, i.name, i.price, i.qty)}
+                                    </div>
+                                    <span class="order-row-price">$${i.price * i.qty}</span>
+                                </div>
+                            </div>`).join("")}
+                        </div>`;
+                });
+
+                html += `<div class="order-grand">合計 <strong>$${grand}</strong></div>`;
+                body.innerHTML = html;
+            }
+
+            // ── 初始化 ────────────────────────────────
             function init() {
                 renderStoreTabs();
                 renderStoreInfo();
                 renderCategoryFilter();
-                renderPriceFilter();
                 renderMenu();
 
                 const input = document.getElementById("searchInput");
                 input.addEventListener("input", () => {
                     searchQuery = input.value.trim();
-                    document
-                        .getElementById("searchClear")
-                        .classList.toggle("visible", searchQuery.length > 0);
+                    document.getElementById("searchClear").classList.toggle("visible", searchQuery.length > 0);
                     renderMenu();
                 });
             }
@@ -120,40 +225,31 @@
             function clearSearch() {
                 searchQuery = "";
                 document.getElementById("searchInput").value = "";
-                document
-                    .getElementById("searchClear")
-                    .classList.remove("visible");
+                document.getElementById("searchClear").classList.remove("visible");
                 renderMenu();
             }
 
             function renderStoreTabs() {
                 const container = document.getElementById("storeTabs");
-                container.innerHTML = stores
-                    .map(
-                        (store) => `
-                <button class="store-tab ${store.id === currentStore.id ? "active" : ""}"
-                        data-store="${store.id}"
-                        onclick="switchStore('${store.id}')">
-                    ${store.name}
-                </button>
-            `,
-                    )
-                    .join("");
+                container.innerHTML = stores.map((store) => `
+                    <button class="store-tab ${store.id === currentStore.id ? "active" : ""}"
+                            data-store="${store.id}" onclick="switchStore('${store.id}')">
+                        ${store.name}
+                    </button>`).join("");
             }
 
             function renderStoreInfo() {
                 const container = document.getElementById("storeInfo");
                 container.innerHTML = `
-                <h2>
-                    ${currentStore.name}
-                    <span class="store-badge ${currentStore.id}">${currentStore.badge}</span>
-                </h2>
-                <div class="store-meta">
-                    <span>📍 ${currentStore.address}</span>
-                    <span>🕐 ${currentStore.hours}</span>
-                    ${currentStore.phone ? `<span>📞 ${currentStore.phone}</span>` : ""}
-                </div>
-            `;
+                    <h2>
+                        ${currentStore.name}
+                        <span class="store-badge ${currentStore.id}">${currentStore.badge}</span>
+                    </h2>
+                    <div class="store-meta">
+                        <span>📍 ${currentStore.address}</span>
+                        <span>🕐 ${currentStore.hours}</span>
+                        ${currentStore.phone ? `<span>📞 ${currentStore.phone}</span>` : ""}
+                    </div>`;
                 container.classList.add("fade-in");
             }
 
@@ -161,55 +257,29 @@
                 const categories = Object.keys(currentStore.menu);
                 const container = document.getElementById("categoryFilter");
                 container.innerHTML = `
-                <button class="category-btn ${currentCategory === "all" ? "active" : ""}"
-                        onclick="filterCategory('all')">全部</button>
-                ${categories
-                    .map(
-                        (cat) => `
-                    <button class="category-btn ${currentCategory === cat ? "active" : ""}"
-                            onclick="filterCategory('${cat}')">
-                        ${cat.replace(/^[^\s]+\s/, "")}
-                    </button>
-                `,
-                    )
-                    .join("")}
-                <button class="category-btn popular-btn ${popularOnly ? "active" : ""}"
-                        onclick="togglePopular()">🔥 人氣</button>
-            `;
-            }
-
-            function renderPriceFilter() {
-                const container = document.getElementById("priceFilter");
-                container.innerHTML = PRICE_FILTERS.map(
-                    (f) => `
-                <button class="category-btn ${currentPriceFilter === f.id ? "active" : ""}"
-                        onclick="filterPrice('${f.id}')">${f.label}</button>
-            `,
-                ).join("");
+                    <button class="category-btn ${currentCategory === "all" ? "active" : ""}"
+                            onclick="filterCategory('all')">全部</button>
+                    ${categories.map((cat) => `
+                        <button class="category-btn ${currentCategory === cat ? "active" : ""}"
+                                onclick="filterCategory('${escJS(cat)}')">
+                            ${cat.replace(/^[^\s]+\s/, "")}
+                        </button>`).join("")}
+                    <button class="category-btn popular-btn ${popularOnly ? "active" : ""}"
+                            onclick="togglePopular()">🔥 人氣</button>`;
             }
 
             function highlightText(text, query) {
                 if (!query) return text;
                 const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-                return text.replace(
-                    new RegExp(escaped, "gi"),
-                    (m) => `<span class="highlight">${m}</span>`,
-                );
+                return text.replace(new RegExp(escaped, "gi"), (m) => `<span class="highlight">${m}</span>`);
             }
 
             function getFilteredItems(items, skipNameFilter = false) {
                 let result = items;
                 if (popularOnly) result = result.filter((i) => i.popular);
-                const priceRule = PRICE_FILTERS.find(
-                    (f) => f.id === currentPriceFilter,
-                );
-                if (priceRule && priceRule.fn)
-                    result = result.filter((i) => priceRule.fn(i.price));
                 if (searchQuery && !skipNameFilter) {
                     const q = searchQuery.toLowerCase();
-                    result = result.filter((i) =>
-                        i.name.toLowerCase().includes(q),
-                    );
+                    result = result.filter((i) => i.name.toLowerCase().includes(q));
                 }
                 return result;
             }
@@ -220,18 +290,15 @@
                 let html = "";
                 let totalShown = 0;
 
-                const categories =
-                    currentCategory === "all"
-                        ? Object.keys(currentStore.menu)
-                        : [currentCategory];
+                const categories = currentCategory === "all"
+                    ? Object.keys(currentStore.menu)
+                    : [currentCategory];
 
-                const isFiltering =
-                    searchQuery || popularOnly || currentPriceFilter !== "all";
+                const isFiltering = searchQuery || popularOnly;
 
                 categories.forEach((category) => {
                     const categoryMatches = searchQuery &&
                         category.toLowerCase().includes(searchQuery.toLowerCase());
-                    // 分類標題符合時，顯示該分類所有品項（仍套用人氣/價格篩選）
                     const items = categoryMatches
                         ? getFilteredItems(currentStore.menu[category], true)
                         : getFilteredItems(currentStore.menu[category]);
@@ -241,26 +308,27 @@
                     html += '<div class="menu-list">';
                     items.forEach((item) => {
                         totalShown++;
+                        const qty = getQty(currentStore.id, item.name);
+                        const key = itemKey(currentStore.id, item.name);
                         html += `
-                        <div class="menu-item fade-in ${item.popular ? "popular" : ""}">
-                            <div class="menu-item-info">
-                                <div class="menu-item-name">${categoryMatches ? item.name : highlightText(item.name, searchQuery)}</div>
-                                ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ""}
-                            </div>
-                            <div class="menu-item-price ${currentStore.id}">$${item.price}</div>
-                        </div>
-                    `;
+                            <div class="menu-item fade-in ${item.popular ? "popular" : ""}">
+                                <div class="menu-item-info">
+                                    <div class="menu-item-name">${categoryMatches ? item.name : highlightText(item.name, searchQuery)}</div>
+                                    ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ""}
+                                </div>
+                                <div class="menu-item-right">
+                                    <div class="menu-item-price ${currentStore.id}">$${item.price}</div>
+                                    <div class="qty-control" data-key="${key}" data-store-id="${currentStore.id}" data-name="${item.name}" data-price="${item.price}">
+                                        ${renderQtyBtns(currentStore.id, item.name, item.price, qty)}
+                                    </div>
+                                </div>
+                            </div>`;
                     });
                     html += "</div>";
                 });
 
                 if (isFiltering && totalShown === 0) {
-                    html = `
-                    <div class="empty-state">
-                        <div class="empty-icon">🔍</div>
-                        <p>找不到符合條件的餐點</p>
-                    </div>
-                `;
+                    html = `<div class="empty-state"><div class="empty-icon">🔍</div><p>找不到符合條件的餐點</p></div>`;
                     infoEl.innerHTML = "";
                 } else if (isFiltering) {
                     infoEl.innerHTML = `<div class="search-result-info">找到 ${totalShown} 項餐點</div>`;
@@ -274,25 +342,17 @@
             function switchStore(storeId) {
                 currentStore = stores.find((s) => s.id === storeId);
                 currentCategory = "all";
-                currentPriceFilter = "all";
                 popularOnly = false;
                 clearSearch();
                 renderStoreTabs();
                 renderStoreInfo();
                 renderCategoryFilter();
-                renderPriceFilter();
                 renderMenu();
             }
 
             function filterCategory(category) {
                 currentCategory = category;
                 renderCategoryFilter();
-                renderMenu();
-            }
-
-            function filterPrice(filterId) {
-                currentPriceFilter = filterId;
-                renderPriceFilter();
                 renderMenu();
             }
 
