@@ -97,34 +97,44 @@
                 return orders[itemKey(storeId, name)]?.qty || 0;
             }
 
-            // ── 數量控制 ──────────────────────────────
+            // ── 點選餐點 ──────────────────────────────
+            function toggleItem(storeId, name, price) {
+                const key = itemKey(storeId, name);
+                if (orders[key]) {
+                    delete orders[key];
+                } else {
+                    const store = stores.find((s) => s.id === storeId);
+                    orders[key] = { storeId, storeName: store.name, name, price, qty: 1 };
+                }
+                updateMenuItemState(storeId, name);
+                updateFab();
+                if (document.getElementById("orderSheet").classList.contains("open")) {
+                    renderOrderBody();
+                }
+            }
+
+            function updateMenuItemState(storeId, name) {
+                const selected = getQty(storeId, name) > 0;
+                const key = itemKey(storeId, name);
+                document.querySelectorAll(`.menu-item[data-key="${CSS.escape(key)}"]`)
+                    .forEach((el) => el.classList.toggle("selected", selected));
+            }
+
+            // ── 訂單面板內的數量調整 ──────────────────
             function renderQtyBtns(storeId, name, price, qty) {
                 const s = escJS(storeId), n = escJS(name);
-                if (qty > 0) {
-                    return `<button class="qty-btn" onclick="changeQty('${s}','${n}',${price},-1)">－</button>`
-                         + `<span class="qty-num">${qty}</span>`
-                         + `<button class="qty-btn qty-add" onclick="changeQty('${s}','${n}',${price},1)">＋</button>`;
-                }
-                return `<button class="qty-btn qty-add" onclick="changeQty('${s}','${n}',${price},1)">＋</button>`;
+                return `<button class="qty-btn" onclick="changeQty('${s}','${n}',${price},-1)">－</button>`
+                     + `<span class="qty-num">${qty}</span>`
+                     + `<button class="qty-btn qty-add" onclick="changeQty('${s}','${n}',${price},1)">＋</button>`;
             }
 
             function changeQty(storeId, name, price, delta) {
                 const key = itemKey(storeId, name);
-                if (!orders[key]) {
-                    const store = stores.find((s) => s.id === storeId);
-                    orders[key] = { storeId, storeName: store.name, name, price, qty: 0 };
-                }
+                if (!orders[key]) return;
                 orders[key].qty = Math.max(0, orders[key].qty + delta);
                 if (orders[key].qty === 0) delete orders[key];
-
-                // 更新選單中的數量按鈕（不重繪整個選單）
-                const qty = getQty(storeId, name);
-                document.querySelectorAll(`.qty-control[data-key="${CSS.escape(itemKey(storeId, name))}"]`)
-                    .forEach((el) => { el.innerHTML = renderQtyBtns(storeId, name, price, qty); });
-
+                updateMenuItemState(storeId, name);
                 updateFab();
-
-                // 若訂單面板已開啟，即時更新
                 if (document.getElementById("orderSheet").classList.contains("open")) {
                     renderOrderBody();
                 }
@@ -151,13 +161,10 @@
 
             function clearAllOrders() {
                 Object.keys(orders).forEach((k) => delete orders[k]);
+                document.querySelectorAll(".menu-item.selected")
+                    .forEach((el) => el.classList.remove("selected"));
                 updateFab();
                 renderOrderBody();
-                // 清除選單上所有數量顯示
-                document.querySelectorAll(".qty-control").forEach((el) => {
-                    const { storeId, name, price } = el.dataset;
-                    el.innerHTML = renderQtyBtns(storeId, name, Number(price), 0);
-                });
             }
 
             function renderOrderBody() {
@@ -310,18 +317,16 @@
                         totalShown++;
                         const qty = getQty(currentStore.id, item.name);
                         const key = itemKey(currentStore.id, item.name);
+                        const sid = escJS(currentStore.id), n = escJS(item.name);
                         html += `
-                            <div class="menu-item fade-in ${item.popular ? "popular" : ""}">
+                            <div class="menu-item fade-in store-${currentStore.id} ${item.popular ? "popular" : ""} ${qty > 0 ? "selected" : ""}"
+                                 data-key="${key}"
+                                 onclick="toggleItem('${sid}','${n}',${item.price})">
                                 <div class="menu-item-info">
                                     <div class="menu-item-name">${categoryMatches ? item.name : highlightText(item.name, searchQuery)}</div>
                                     ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ""}
                                 </div>
-                                <div class="menu-item-right">
-                                    <div class="menu-item-price ${currentStore.id}">$${item.price}</div>
-                                    <div class="qty-control" data-key="${key}" data-store-id="${currentStore.id}" data-name="${item.name}" data-price="${item.price}">
-                                        ${renderQtyBtns(currentStore.id, item.name, item.price, qty)}
-                                    </div>
-                                </div>
+                                <div class="menu-item-price ${currentStore.id}">$${item.price}</div>
                             </div>`;
                     });
                     html += "</div>";
