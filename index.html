@@ -153,6 +153,8 @@
                 const fab = document.getElementById("orderFab");
                 fab.style.display = total > 0 ? "flex" : "none";
                 document.getElementById("orderFabCount").textContent = total;
+                const shareBtn = document.querySelector(".line-share-btn");
+                if (shareBtn) shareBtn.disabled = total === 0;
             }
 
             // ── 訂單面板 ──────────────────────────────
@@ -167,12 +169,34 @@
                 document.getElementById("orderSheet").classList.remove("open");
             }
 
+            let _clearTimer = null;
+            let _clearConfirming = false;
+
             function clearAllOrders() {
+                const btn = document.querySelector(".order-clear-btn");
+                if (!_clearConfirming) {
+                    _clearConfirming = true;
+                    btn.textContent = "確定清除？";
+                    btn.classList.add("confirming");
+                    _clearTimer = setTimeout(() => {
+                        _clearConfirming = false;
+                        btn.textContent = "清除全部";
+                        btn.classList.remove("confirming");
+                    }, 2500);
+                    return;
+                }
+                clearTimeout(_clearTimer);
+                _clearConfirming = false;
                 Object.keys(orders).forEach((k) => delete orders[k]);
                 document.querySelectorAll(".menu-item.selected")
                     .forEach((el) => el.classList.remove("selected"));
                 updateFab();
                 renderOrderBody();
+            }
+
+            function updateNote(storeId, name, value) {
+                const key = itemKey(storeId, name);
+                if (orders[key]) orders[key].note = value;
             }
 
             function shareToLine() {
@@ -196,7 +220,9 @@
                         grand += sub;
                         text += `・${i.name}`;
                         if (i.qty > 1) text += ` x${i.qty}`;
-                        text += `  $${sub}\n`;
+                        text += `  $${sub}`;
+                        if (i.note) text += `（${i.note}）`;
+                        text += "\n";
                     });
                 });
                 text += `\n合計 $${grand}`;
@@ -236,9 +262,15 @@
                             </div>
                             ${items.map((i) => `
                             <div class="order-row">
-                                <span class="order-row-name">${i.name}</span>
+                                <div class="order-row-left">
+                                    <span class="order-row-name">${i.name}</span>
+                                    <input class="order-note-input"
+                                           placeholder="備註（如：不要蔥）"
+                                           value="${(i.note || "").replace(/"/g, "&quot;")}"
+                                           oninput="updateNote('${escJS(i.storeId)}','${escJS(i.name)}',this.value)">
+                                </div>
                                 <div class="order-row-right">
-                                    <div class="qty-control order-qty" data-key="${itemKey(i.storeId, i.name)}" data-store-id="${i.storeId}" data-name="${i.name}" data-price="${i.price}">
+                                    <div class="qty-control order-qty">
                                         ${renderQtyBtns(i.storeId, i.name, i.price, i.qty)}
                                     </div>
                                     <span class="order-row-price">$${i.price * i.qty}</span>
