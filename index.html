@@ -16,30 +16,33 @@
         <header class="header">
             <h1>🍳 早餐店菜單</h1>
             <p>達利早餐 · 麥味登 · Q Burger · 卯時早午餐</p>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切換深色模式"></button>
         </header>
 
-        <div class="store-tabs-wrapper">
-            <nav class="store-tabs" id="storeTabs"></nav>
-        </div>
+        <div class="sticky-header">
+            <div class="store-tabs-wrapper">
+                <nav class="store-tabs" id="storeTabs"></nav>
+            </div>
 
-        <section class="store-info" id="storeInfo"></section>
+            <div class="search-bar-wrapper">
+                <div class="search-bar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="搜尋餐點名稱..." autocomplete="off" />
+                    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+                </div>
+            </div>
 
-        <div class="search-bar-wrapper">
-            <div class="search-bar">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.35-4.35" />
-                </svg>
-                <input type="text" id="searchInput" placeholder="搜尋餐點名稱..." autocomplete="off" />
-                <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+            <div class="filter-row">
+                <nav class="category-filter" id="categoryFilter"></nav>
             </div>
         </div>
 
-        <div class="filter-row">
-            <nav class="category-filter" id="categoryFilter"></nav>
-        </div>
+        <section class="store-info" id="storeInfo"></section>
 
         <main class="menu-container">
             <div id="searchResultInfo"></div>
@@ -54,6 +57,9 @@
                 <a href="https://www.qburger.com.tw" target="_blank">Q Burger官網</a>
             </p>
         </footer>
+
+        <!-- 捲回頂部 -->
+        <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
         <!-- 訂單 FAB -->
         <button class="order-fab" id="orderFab" onclick="openOrder()" style="display:none">
@@ -80,6 +86,29 @@
         </aside>
 
         <script src="data.js"></script>
+        <script>
+            // ── 深色模式 ──────────────────────────────
+            (function () {
+                const saved = localStorage.getItem("theme");
+                const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                const isDark = saved === "dark" || (!saved && prefersDark);
+                if (isDark) document.documentElement.setAttribute("data-theme", "dark");
+                updateToggleIcon(isDark);
+
+                function updateToggleIcon(dark) {
+                    const btn = document.getElementById("themeToggle");
+                    if (btn) btn.textContent = dark ? "☀️" : "🌙";
+                }
+
+                window.toggleTheme = function () {
+                    const current = document.documentElement.getAttribute("data-theme");
+                    const next = current === "dark" ? "light" : "dark";
+                    document.documentElement.setAttribute("data-theme", next);
+                    localStorage.setItem("theme", next);
+                    updateToggleIcon(next === "dark");
+                };
+            })();
+        </script>
         <script>
             // ============================================
             // 程式邏輯
@@ -291,6 +320,11 @@
                 renderMenu();
 
                 const input = document.getElementById("searchInput");
+                window.addEventListener("scroll", () => {
+                    document.getElementById("scrollTopBtn")
+                        .classList.toggle("visible", window.scrollY > 300);
+                });
+
                 input.addEventListener("input", () => {
                     searchQuery = input.value.trim();
                     document.getElementById("searchClear").classList.toggle("visible", searchQuery.length > 0);
