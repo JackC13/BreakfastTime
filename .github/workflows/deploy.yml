@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -30,6 +30,9 @@ jobs:
 
       - name: Build
         run: npx ng build --base-href /BreakfastTime/
+
+      - name: Verify build output
+        run: ls dist/breakfast-time/browser
 
       - uses: actions/upload-pages-artifact@v3
         with:
