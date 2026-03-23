@@ -1,65 +1,27 @@
-# 🍳 早餐店菜單網站
+# BreakfastTime
 
-收錄四家早餐店菜單：**達利早餐**、**麥味登**、**Q Burger**、**卯時早午餐**
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
 
-純靜態網頁，支援 GitHub Pages 部署。
+## Development server
 
-## 📋 收錄店家
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-| 店家 | 特色 | 官網 |
-|------|------|------|
-| 達利早餐 | 蛋餅、鮮奶漢堡、鹽可頌、水耕沙拉 | [dailybreakfast.com.tw](https://dailybreakfast.com.tw) |
-| 麥味登 | 滿分堡、鐵板麵、手工蔥抓蛋餅 | - |
-| Q Burger | 漢堡、鍋燒麵、韓國站系列 | [qburger.com.tw](https://www.qburger.com.tw) |
-| 卯時早午餐 | 獨門炒麵、三杯蘿蔔糕、凍檸茶 | - |
+## Code scaffolding
 
-## 🚀 部署到 GitHub Pages
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-### 步驟 1：建立 Repository
-1. 登入 GitHub → 點擊 `+` → `New repository`
-2. 命名為 `breakfast-menu`，選擇 `Public`
+## Build
 
-### 步驟 2：上傳檔案
-直接將 `index.html` 拖曳上傳到 repository
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-### 步驟 3：啟用 Pages
-Settings → Pages → Source 選擇 `main` branch → Save
+## Running unit tests
 
-### 步驟 4：完成！
-網址：`https://你的帳號.github.io/breakfast-menu/`
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
----
+## Running end-to-end tests
 
-## ✏️ 修改菜單
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-編輯 `index.html` 中的 `const stores = [...]`：
+## Further help
 
-```javascript
-{
-    id: 'store-id',
-    name: '店家名稱',
-    badge: '標籤',
-    address: '地址',
-    hours: '營業時間',
-    menu: {
-        '🥪 分類名稱': [
-            { name: '品項', price: 50 },
-            { name: '人氣品項', price: 60, popular: true },
-        ],
-    }
-}
-```
-
----
-
-## 📱 功能
-
-- ✅ 四家店菜單切換
-- ✅ 分類篩選
-- ✅ 🔥 人氣商品標示
-- ✅ 響應式設計
-- ✅ 純靜態，免後端
-
-## 📄 授權
-
-MIT License
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

@@ -1,0 +1,59 @@
+<header class="header">
+  <h1>🍳 早餐店菜單</h1>
+  <p>達利早餐 · 麥味登 · Q Burger · 卯時早午餐</p>
+</header>
+
+<div class="sticky-header">
+  <div class="store-tabs-wrapper">
+    <app-store-tabs
+      [stores]="stores"
+      [activeStoreId]="activeStoreId()"
+      (storeChange)="switchStore($event)" />
+  </div>
+
+  <app-search-bar [(query)]="searchQuery" />
+
+  <app-category-filter
+    [categories]="categories()"
+    [activeCategory]="activeCategory()"
+    [popularOnly]="popularOnly()"
+    (categoryChange)="activeCategory.set($event)"
+    (popularToggle)="popularOnly.set(!popularOnly())" />
+</div>
+
+<section class="store-info">
+  <h2>
+    {{ activeStore().name }}
+    <span class="store-badge" [class]="activeStore().id">{{ activeStore().badge }}</span>
+  </h2>
+  <div class="store-meta">
+    <span>📍 {{ activeStore().address }}</span>
+    <span>🕐 {{ activeStore().hours }}</span>
+    @if (activeStore().phone) {
+      <span>📞 {{ activeStore().phone }}</span>
+    }
+  </div>
+</section>
+
+<app-menu-list
+  [store]="activeStore()"
+  [activeCategory]="activeCategory()"
+  [popularOnly]="popularOnly()"
+  [searchQuery]="searchQuery()" />
+
+<footer class="footer">
+  <p>菜單價格僅供參考，實際以店家公告為準</p>
+  <p style="margin-top: 0.5rem">
+    <a href="https://dailybreakfast.com.tw" target="_blank">達利早餐官網</a>
+    ·
+    <a href="https://www.qburger.com.tw" target="_blank">Q Burger官網</a>
+  </p>
+</footer>
+
+<button class="scroll-top-btn" [class.visible]="showScrollTop()" (click)="scrollTop()">↑</button>
+
+<app-order-fab (open)="orderOpen.set(true)" />
+
+@if (orderOpen()) {
+  <app-order-drawer (close)="orderOpen.set(false)" />
+}
