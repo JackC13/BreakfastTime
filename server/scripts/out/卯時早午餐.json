@@ -1,0 +1,412 @@
+{
+  "store": {
+    "name": "卯時早午餐",
+    "address": "248台灣新北市五股區芳洲一路28號",
+    "phone": "+886282921860",
+    "hours": null
+  },
+  "menu": [
+    {
+      "category": "卯時炒麵",
+      "items": [
+        {
+          "name": "無骨黃金雞排炒麵",
+          "price": 125
+        },
+        {
+          "name": "起司藍帶豬排炒麵",
+          "price": 125
+        },
+        {
+          "name": "招牌炒麵",
+          "price": 75
+        },
+        {
+          "name": "辣味卡拉雞腿炒麵",
+          "price": 130
+        },
+        {
+          "name": "厚切菲力雞排炒麵",
+          "price": 125
+        },
+        {
+          "name": "酥炸大阪豬排炒麵",
+          "price": 125
+        },
+        {
+          "name": "香雞排炒麵",
+          "price": 100
+        },
+        {
+          "name": "豬排炒麵",
+          "price": 110
+        },
+        {
+          "name": "檸檬雞柳炒麵",
+          "price": 110
+        },
+        {
+          "name": "德式香腸炒麵",
+          "price": 110
+        }
+      ]
+    },
+    {
+      "category": "風味炒麵",
+      "items": [
+        {
+          "name": "咖喱烏龍麵",
+          "price": 70
+        },
+        {
+          "name": "番茄肉醬義大利麵",
+          "price": 70
+        },
+        {
+          "name": "塔香三杯雞炒麵",
+          "price": 70
+        },
+        {
+          "name": "宮保雞丁炒麵",
+          "price": 70
+        },
+        {
+          "name": "泰式打拋豬炒麵",
+          "price": 70
+        }
+      ]
+    },
+    {
+      "category": "新品上市",
+      "items": [
+        {
+          "name": "日式炒麵麵包",
+          "price": 85
+        },
+        {
+          "name": "美式大熱狗堡",
+          "price": 80
+        }
+      ]
+    },
+    {
+      "category": "卯時吐司/漢堡",
+      "items": [
+        {
+          "name": "辣味卡拉雞腿蛋",
+          "price": 95
+        },
+        {
+          "name": "四盎司起司牛肉蛋",
+          "price": 120
+        },
+        {
+          "name": "香雞排蛋",
+          "price": 60
+        },
+        {
+          "name": "鮪魚蛋",
+          "price": 60
+        },
+        {
+          "name": "火腿蛋",
+          "price": 55
+        },
+        {
+          "name": "豬排蛋",
+          "price": 65
+        },
+        {
+          "name": "起司藍帶豬排蛋",
+          "price": 90
+        },
+        {
+          "name": "培根蛋",
+          "price": 55
+        },
+        {
+          "name": "四盎司培根牛肉蛋",
+          "price": 130
+        },
+        {
+          "name": "薯餅蛋",
+          "price": 60
+        },
+        {
+          "name": "檸檬雞柳蛋",
+          "price": 75
+        },
+        {
+          "name": "德式香腸起司蛋",
+          "price": 80
+        },
+        {
+          "name": "果醬吐司",
+          "price": 30
+        },
+        {
+          "name": "煎蛋",
+          "price": 45
+        },
+        {
+          "name": "起司蛋",
+          "price": 55
+        },
+        {
+          "name": "玉米蛋",
+          "price": 55
+        }
+      ]
+    },
+    {
+      "category": "厚片系列",
+      "items": [
+        {
+          "name": "果醬厚片",
+          "price": 50
+        },
+        {
+          "name": "玉米鮪魚焗烤厚片",
+          "price": 85
+        },
+        {
+          "name": "培根玉米焗烤厚片",
+          "price": 85
+        },
+        {
+          "name": "金沙乳酪厚片",
+          "price": 80
+        }
+      ]
+    },
+    {
+      "category": "手工酥皮蛋捲餅",
+      "items": [
+        {
+          "name": "金黃玉米蛋捲餅",
+          "price": 55
+        },
+        {
+          "name": "香酥培根蛋捲餅",
+          "price": 55
+        },
+        {
+          "name": "玉米鮪魚蛋捲餅",
+          "price": 65
+        },
+        {
+          "name": "起司薯餅蛋捲餅",
+          "price": 70
+        },
+        {
+          "name": "甲霸大熱狗蛋捲餅",
+          "price": 60
+        },
+        {
+          "name": "塔香豬排蛋捲餅",
+          "price": 70
+        },
+        {
+          "name": "起司蛋捲餅",
+          "price": 50
+        },
+        {
+          "name": "起司三兄弟蛋捲餅",
+          "price": 70
+        },
+        {
+          "name": "辣味卡拉雞腿蛋捲餅",
+          "price": 95
+        },
+        {
+          "name": "花生培根蛋捲餅",
+          "price": 70
+        },
+        {
+          "name": "培根乳酪蛋捲餅",
+          "price": 65
+        },
+        {
+          "name": "九層塔蛋捲餅",
+          "price": 50
+        },
+        {
+          "name": "火腿乳酪蛋捲餅",
+          "price": 60
+        },
+        {
+          "name": "香雞排蛋捲餅",
+          "price": 60
+        },
+        {
+          "name": "韓式泡菜蛋捲餅",
+          "price": 65
+        },
+        {
+          "name": "巧克力起司蛋捲餅",
+          "price": 55
+        },
+        {
+          "name": "檸檬雞柳蛋餅蛋捲餅",
+          "price": 75
+        }
+      ]
+    },
+    {
+      "category": "卯時單品",
+      "items": [
+        {
+          "name": "三杯蘿蔔糕",
+          "price": 65
+        },
+        {
+          "name": "小熱狗",
+          "price": 25
+        },
+        {
+          "name": "蘿蔔糕",
+          "price": 50
+        },
+        {
+          "name": "炸餃",
+          "price": 55
+        },
+        {
+          "name": "薯餅",
+          "price": 55
+        },
+        {
+          "name": "無骨黃金雞排",
+          "price": 60
+        },
+        {
+          "name": "香雞排",
+          "price": 30
+        },
+        {
+          "name": "辣味雞塊",
+          "price": 60
+        },
+        {
+          "name": "小雞球",
+          "price": 45
+        },
+        {
+          "name": "美式脆薯",
+          "price": 60
+        },
+        {
+          "name": "甲霸大熱狗",
+          "price": 35
+        },
+        {
+          "name": "芋泥球",
+          "price": 45
+        },
+        {
+          "name": "雞柳條",
+          "price": 45
+        },
+        {
+          "name": "辣味卡拉雞腿",
+          "price": 60
+        },
+        {
+          "name": "起司藍帶豬排",
+          "price": 60
+        },
+        {
+          "name": "黑胡椒豬排",
+          "price": 45
+        }
+      ]
+    },
+    {
+      "category": "乳酪餅",
+      "items": [
+        {
+          "name": "果醬乳酪餅",
+          "price": 45
+        },
+        {
+          "name": "起司乳酪餅",
+          "price": 50
+        },
+        {
+          "name": "火腿乳酪餅",
+          "price": 50
+        },
+        {
+          "name": "培根乳酪餅",
+          "price": 55
+        },
+        {
+          "name": "大熱狗乳酪餅",
+          "price": 65
+        },
+        {
+          "name": "檸檬雞柳乳酪餅",
+          "price": 75
+        }
+      ]
+    },
+    {
+      "category": "飲料",
+      "items": [
+        {
+          "name": "阿薩姆奶茶",
+          "price": 40
+        },
+        {
+          "name": "豆漿",
+          "price": 40
+        },
+        {
+          "name": "凍檸茶",
+          "price": 50
+        },
+        {
+          "name": "古早味紅茶",
+          "price": 25
+        },
+        {
+          "name": "美式咖啡【冰/熱】",
+          "price": 40
+        },
+        {
+          "name": "豆漿紅茶",
+          "price": 45
+        },
+        {
+          "name": "草莓牛奶",
+          "price": 45
+        },
+        {
+          "name": "巧克力牛奶",
+          "price": 45
+        },
+        {
+          "name": "豆漿奶茶",
+          "price": 45
+        },
+        {
+          "name": "果汁牛奶",
+          "price": 45
+        },
+        {
+          "name": "麥芽牛奶",
+          "price": 45
+        },
+        {
+          "name": "無糖豆漿",
+          "price": 40
+        }
+      ]
+    }
+  ],
+  "source": {
+    "platform": "ubereats",
+    "url": "https://www.ubereats.com/tw/store/%E5%8D%AF%E6%99%82%E6%97%A9%E5%8D%88%E9%A4%90/nBxbv_feSmOPEFuZvTEB8Q",
+    "fetchedWith": "extract-menu.js"
+  }
+}

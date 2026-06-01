@@ -6,6 +6,7 @@ import { CategoryFilterComponent } from './features/menu/components/category-fil
 import { MenuListComponent } from './features/menu/components/menu-list/menu-list.component';
 import { OrderFabComponent } from './features/cart/components/order-fab/order-fab.component';
 import { OrderDrawerComponent } from './features/cart/components/order-drawer/order-drawer.component';
+import { MenuImportComponent } from './features/menu-import/menu-import.component';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { OrderDrawerComponent } from './features/cart/components/order-drawer/or
     MenuListComponent,
     OrderFabComponent,
     OrderDrawerComponent,
+    MenuImportComponent,
   ],
   templateUrl: './app.component.html',
 })
@@ -24,14 +26,15 @@ export class AppComponent {
   private menuData = inject(MenuDataService);
 
   readonly stores = this.menuData.stores;
-  readonly activeStoreId = signal(this.stores[0].id);
+  readonly activeStoreId = signal(this.menuData.stores()[0].id);
   readonly activeCategory = signal('all');
   readonly popularOnly = signal(false);
   readonly searchQuery = signal('');
   readonly orderOpen = signal(false);
+  readonly importOpen = signal(false);
   readonly showScrollTop = signal(false);
 
-  readonly activeStore = computed(() => this.stores.find(s => s.id === this.activeStoreId())!);
+  readonly activeStore = computed(() => this.stores().find(s => s.id === this.activeStoreId())!);
   readonly categories = computed(() => Object.keys(this.activeStore().menu));
 
   @HostListener('window:scroll')
@@ -48,5 +51,9 @@ export class AppComponent {
 
   scrollTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onImport(storeId: string): void {
+    this.switchStore(storeId);
   }
 }

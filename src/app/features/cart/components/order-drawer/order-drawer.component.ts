@@ -92,7 +92,7 @@ export class OrderDrawerComponent implements AfterViewInit {
   }
 
   get groupedItems(): Array<{ storeId: string; storeName: string; items: CartItem[]; subtotal: number }> {
-    const storeOrder = this.menuData.stores.map(s => s.id);
+    const storeOrder = this.menuData.stores().map((s: { id: string }) => s.id);
     const map = new Map<string, { storeId: string; storeName: string; items: CartItem[]; subtotal: number }>();
     for (const item of this.cart.items()) {
       if (!map.has(item.storeId)) {

@@ -1,12 +1,13 @@
 <header class="header">
   <h1>🍳 早餐店菜單</h1>
   <p>達利早餐 · 麥味登 · Q Burger · 卯時早午餐</p>
+  <button class="import-trigger" (click)="importOpen.set(true)">＋ 匯入菜單</button>
 </header>
 
 <div class="sticky-header">
   <div class="store-tabs-wrapper">
     <app-store-tabs
-      [stores]="stores"
+      [stores]="stores()"
       [activeStoreId]="activeStoreId()"
       (storeChange)="switchStore($event)" />
   </div>
@@ -56,4 +57,8 @@
 
 @if (orderOpen()) {
   <app-order-drawer (close)="orderOpen.set(false)" />
+}
+
+@if (importOpen()) {
+  <app-menu-import (close)="importOpen.set(false)" (imported)="onImport($event); importOpen.set(false)" />
 }

@@ -2,7 +2,27 @@
   "permissions": {
     "allow": [
       "Bash(python3:*)",
-      "Bash(nvm exec:*)"
+      "Bash(nvm exec:*)",
+      "Bash(curl:*)",
+      "Bash(lsof -i:3001)",
+      "Bash(lsof -ti:3001)",
+      "Bash(xargs kill:*)",
+      "Bash(node:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx ng:*)",
+      "Bash(lsof -i:4200)",
+      "Bash(kill 24213 24216 23332)",
+      "Bash(npm install:*)",
+      "Bash(jobs -l)",
+      "Bash(wait)",
+      "WebFetch(domain:www.ubereats.com)",
+      "Bash(npx ts-node *)",
+      "Bash(break)",
+      "Bash(awk \"/id: 'mwd'/{print NR-3\\\\\"-\\\\\"NR\\\\\":\\\\\"; exit}\" src/app/core/services/menu-data.service.ts)",
+      "Bash(sed -n '167,175p' src/app/core/services/menu-data.service.ts)",
+      "Bash(git check-ignore *)",
+      "Bash(git add *)",
+      "Bash(grep -iE \"\\\\.env$|node_modules\")"
     ]
   }
 }
