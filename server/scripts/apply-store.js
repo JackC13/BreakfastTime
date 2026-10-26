@@ -115,6 +115,7 @@ function emitBlock(data, opts, existing) {
   if (hours) out += `      hours: '${esc(hours)}',\n`;
   if (phone) out += `      phone: '${esc(phone)}',\n`;
   if (existing.website) out += `      website: '${esc(existing.website)}',\n`;
+  if (opts.updatedAt) out += `      menuUpdatedAt: '${esc(opts.updatedAt)}',\n`;
   out += '      menu: {\n';
   for (const c of data.menu) {
     const key = `${existing.emojis[c.category] ?? guessEmoji(c.category)} ${c.category}`;
@@ -143,10 +144,18 @@ function emitBlock(data, opts, existing) {
     hours: readMeta(obj.text, 'hours'),
     phone: readMeta(obj.text, 'phone'),
     website: readMeta(obj.text, 'website'),
+    menuUpdatedAt: readMeta(obj.text, 'menuUpdatedAt'),
     emojis: readEmojis(obj.text),
   };
 
-  const block = emitBlock(data, opts, existing);
+  // 菜單沒變就保留原日期、不寫檔（避免每週自動更新只因日期變動就開 PR）
+  if (emitBlock(data, { ...opts, updatedAt: existing.menuUpdatedAt }, existing) === obj.text) {
+    console.error(`'${opts.id}' 菜單無變動，未寫檔`);
+    return;
+  }
+  const fetchedAt = data.source?.fetchedAt
+    ?? fs.statSync(path.resolve(jsonPath)).mtime.toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
+  const block = emitBlock(data, { ...opts, updatedAt: fetchedAt }, existing);
   if (opts.dry) { process.stdout.write(block + '\n'); return; }
 
   const next = src.slice(0, obj.start) + block + src.slice(obj.end);

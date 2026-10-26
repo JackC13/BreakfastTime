@@ -33,6 +33,9 @@
     @if (activeStore().phone) {
       <span>📞 {{ activeStore().phone }}</span>
     }
+    @if (activeStore().menuUpdatedAt) {
+      <span>🔄 菜單更新 {{ activeStore().menuUpdatedAt }}</span>
+    }
   </div>
 </section>
 

@@ -13,6 +13,7 @@ export interface Store {
   hours: string;
   phone?: string;
   website?: string;
+  menuUpdatedAt?: string; // YYYY-MM-DD，由 server/scripts/apply-store.js 寫入
   menu: Record<string, MenuItem[]>;
 }
 

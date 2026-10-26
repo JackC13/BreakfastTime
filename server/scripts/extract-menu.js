@@ -191,7 +191,8 @@ async function extractQuickclick(url) {
   const htmlFile = htmlIdx > 0 ? process.argv[htmlIdx + 1] : null;
   if (platform === 'ubereats') result = extractUber(htmlFile ? fs.readFileSync(htmlFile, 'utf8') : await fetchUberHtml(url));
   else result = await extractQuickclick(url);
-  result.source = { platform, url, fetchedWith: 'extract-menu.js' };
+  const fetchedAt = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' }); // YYYY-MM-DD
+  result.source = { platform, url, fetchedAt, fetchedWith: 'extract-menu.js' };
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const key = (result.store.name || 'store').replace(/[^\w一-鿿]+/g, '_').slice(0, 40);

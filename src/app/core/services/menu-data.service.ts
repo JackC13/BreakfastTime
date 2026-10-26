@@ -12,6 +12,7 @@ export class MenuDataService {
       hours: '平日 06:00-13:30 / 假日 06:00-14:00',
       phone: '02-82927899',
       website: 'https://dailybreakfast.com.tw',
+      menuUpdatedAt: '2026-10-26',
       menu: {
         '🌷 我把達利變花園了': [
           { name: '花園三重奏', price: 188 },
@@ -230,6 +231,7 @@ export class MenuDataService {
       address: '新北市五股區中興路四段48巷1號1樓',
       hours: '06:30 - 15:30',
       phone: '+886922511853',
+      menuUpdatedAt: '2026-06-03',
       menu: {
         '🍔 漢堡': [
           { name: '超厚牛肉起司漢堡', price: 90 },
@@ -439,6 +441,7 @@ export class MenuDataService {
       hours: '06:00 - 14:00',
       phone: '+886282922183',
       website: 'https://www.qburger.com.tw',
+      menuUpdatedAt: '2026-06-03',
       menu: {
         '✨ 期間限定': [
           { name: '【套餐】吳寶春 · 鮮蔬莫扎瑞拉火腿佛卡夏', price: 213 },
@@ -684,6 +687,7 @@ export class MenuDataService {
       address: '新北市五股區芳洲一路28號',
       hours: '07:00 - 13:00',
       phone: '+886282921860',
+      menuUpdatedAt: '2026-06-03',
       menu: {
         '🍝 卯時炒麵': [
           { name: '無骨黃金雞排炒麵', price: 125 },
