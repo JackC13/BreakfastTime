@@ -59,9 +59,7 @@ export class MenuDataService {
           { name: '蜜焰雞胸堡', price: 75 },
           { name: '蜜焰卡啦雞堡', price: 80 },
           { name: 'BBQ雞腿排堡', price: 80 },
-          { name: '胡麻豬排堡', price: 85 },
           { name: '經典美式厚牛堡', price: 98 },
-          { name: '黃金厚炸豬排堡', price: 85 },
         ],
         '🥪 半熟吐司': [
           { name: '方火腿吐司', price: 35 },
@@ -88,8 +86,6 @@ export class MenuDataService {
           { name: '地瓜素鬆鮮蔬捲', price: 60 },
           { name: '檸檬優格雞胸捲', price: 85 },
           { name: '蜜焰卡啦雞捲', price: 85 },
-          { name: '胡麻炸豬排捲', price: 85 },
-          { name: '黃金厚切炸豬排捲', price: 85 },
         ],
         '🍞 果醬吐司': [
           { name: '美味草莓薄片', price: 25 },
