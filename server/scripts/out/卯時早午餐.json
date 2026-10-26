@@ -374,8 +374,24 @@
           "price": 40
         },
         {
+          "name": "紅茶鮮奶",
+          "price": 50
+        },
+        {
           "name": "豆漿紅茶",
           "price": 45
+        },
+        {
+          "name": "拿鐵咖啡",
+          "price": 50
+        },
+        {
+          "name": "黑糖鮮奶",
+          "price": 60
+        },
+        {
+          "name": "鮮奶",
+          "price": 55
         },
         {
           "name": "草莓牛奶",
@@ -406,7 +422,7 @@
   ],
   "source": {
     "platform": "ubereats",
-    "url": "https://www.ubereats.com/tw/store/%E5%8D%AF%E6%99%82%E6%97%A9%E5%8D%88%E9%A4%90/nBxbv_feSmOPEFuZvTEB8Q",
+    "url": "https://www.ubereats.com/tw/store/卯時早午餐/nBxbv_feSmOPEFuZvTEB8Q",
     "fetchedWith": "extract-menu.js"
   }
 }

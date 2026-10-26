@@ -14,10 +14,6 @@
           "price": 90
         },
         {
-          "name": "香雞漢堡",
-          "price": 45
-        },
-        {
           "name": "豬肉漢堡",
           "price": 50
         },
@@ -99,10 +95,6 @@
           "price": 55
         },
         {
-          "name": "香雞湯種",
-          "price": 45
-        },
-        {
           "name": "豬肉湯種",
           "price": 50
         },
@@ -177,10 +169,6 @@
           "price": 75
         },
         {
-          "name": "香雞丹麥麵包",
-          "price": 60
-        },
-        {
           "name": "超厚雞肉起司丹麥麵包",
           "price": 100
         },
@@ -236,10 +224,6 @@
         {
           "name": "鮮蛋沙拉可頌",
           "price": 70
-        },
-        {
-          "name": "香雞可頌",
-          "price": 60
         },
         {
           "name": "培根可頌",
@@ -775,7 +759,7 @@
   ],
   "source": {
     "platform": "ubereats",
-    "url": "https://www.ubereats.com/tw/store/%E9%BA%A5%E5%91%B3%E7%99%BB-%E4%BA%94%E8%82%A1%E4%B8%AD%E8%88%88%E5%BA%97/sjeDNomJS-mtHCMiavROcA",
+    "url": "https://www.ubereats.com/tw/store/麥味登-五股中興店/sjeDNomJS-mtHCMiavROcA",
     "fetchedWith": "extract-menu.js"
   }
 }

@@ -33,6 +33,12 @@ npm start                                  # 開 http://localhost:4200 點該分
 - 寫回前自動備份成 `menu-data.service.ts.bak`，改壞可還原。
 - emoji 前綴是自動猜的，不滿意就直接編 `menu-data.service.ts` 改那一格，或調 `apply-store.js` 的 `EMOJI_RULES`。
 
+## 🤖 達利每週自動更新
+
+`.github/workflows/update-menu-daily.yml` 每週一 06:00（台灣時間）自動抓 quickclick → 寫回 → tsc 檢查，
+**有變動才開 PR**（branch `auto/menu-daily`），看過 diff、調好新分類 emoji 再 merge。
+也可在 GitHub Actions 頁面手動 Run workflow。UberEats 三家有 reCAPTCHA，無法自動，仍照上面手動流程。
+
 ---
 
 ## 前置

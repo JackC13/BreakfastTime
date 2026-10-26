@@ -90,6 +90,13 @@ function readMeta(objText, key) {
   return m ? m[1] : null;
 }
 
+// 現有分類的 emoji（'🍳 早午餐' → { 早午餐: '🍳' }），同名分類沿用，保留手動調整
+function readEmojis(objText) {
+  const map = {};
+  for (const m of objText.matchAll(/^\s*'(\S+) ((?:[^'\\]|\\.)+)': \[/gm)) map[m[2]] = m[1];
+  return map;
+}
+
 function emitBlock(data, opts, existing) {
   const s = data.store || {};
   const pick = (cliVal, jsonVal, existingVal) =>
@@ -110,7 +117,7 @@ function emitBlock(data, opts, existing) {
   if (existing.website) out += `      website: '${esc(existing.website)}',\n`;
   out += '      menu: {\n';
   for (const c of data.menu) {
-    const key = `${guessEmoji(c.category)} ${c.category}`;
+    const key = `${existing.emojis[c.category] ?? guessEmoji(c.category)} ${c.category}`;
     out += `        '${esc(key)}': [\n`;
     for (const it of c.items) out += `          { name: '${esc(it.name)}', price: ${it.price} },\n`;
     out += '        ],\n';
@@ -136,6 +143,7 @@ function emitBlock(data, opts, existing) {
     hours: readMeta(obj.text, 'hours'),
     phone: readMeta(obj.text, 'phone'),
     website: readMeta(obj.text, 'website'),
+    emojis: readEmojis(obj.text),
   };
 
   const block = emitBlock(data, opts, existing);

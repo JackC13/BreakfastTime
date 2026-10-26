@@ -38,9 +38,14 @@ function urlfix(s) {
   return t.replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
 }
 function cleanName(t) {
-  let n = urlfix(t || '').split('｜')[0].split('|')[0];
+  const base = urlfix(t || '').split('｜')[0].split('|')[0];
+  let n = base;
   n = n.replace(/\s+[A-Za-z][\x00-\x7F]*$/, '');      // strip trailing " English"
   n = n.replace(/[A-Za-z][A-Za-z0-9\-&'.() ]*$/, ''); // strip trailing glued English
+  if ((n.match(/\(/g) || []).length > (n.match(/\)/g) || []).length) { // 剝到括號裡（如 (8oz)）就補回到右括號
+    const close = base.indexOf(')', n.length);
+    if (close >= 0) n = base.slice(0, close + 1);
+  }
   n = n.replace(/[\s.．。·・、，,]+$/, '');              // strip trailing punctuation/dots
   return n.trim();
 }
@@ -175,13 +180,16 @@ async function extractQuickclick(url) {
 // ---------- main ----------
 (async () => {
   const url = process.argv[2];
-  if (!url) { console.error('用法: node extract-menu.js "<URL>"'); process.exit(1); }
+  if (!url) { console.error('用法: node extract-menu.js "<URL>" [--html <存下的頁面.html>]'); process.exit(1); }
   const platform = detectPlatform(url);
   if (!platform) { console.error('不支援的網址（僅支援 ubereats.com / quickclick.cc）'); process.exit(1); }
   process.stderr.write(`platform = ${platform}\n`);
 
   let result;
-  if (platform === 'ubereats') result = extractUber(await fetchUberHtml(url));
+  // --html <file>：UberEats 擋 headless 時，改用瀏覽器手動存下的頁面 HTML
+  const htmlIdx = process.argv.indexOf('--html');
+  const htmlFile = htmlIdx > 0 ? process.argv[htmlIdx + 1] : null;
+  if (platform === 'ubereats') result = extractUber(htmlFile ? fs.readFileSync(htmlFile, 'utf8') : await fetchUberHtml(url));
   else result = await extractQuickclick(url);
   result.source = { platform, url, fetchedWith: 'extract-menu.js' };
 

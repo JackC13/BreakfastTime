@@ -1,0 +1,60 @@
+name: Weekly menu update (達利)
+
+# 每週從 quickclick 抓達利菜單，有變動才開 PR（看過 diff 再 merge，merge 後由 deploy.yml 部署）
+on:
+  schedule:
+    - cron: '0 22 * * 0' # 每週一 06:00（台灣時間）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-menu-daily
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm ci --prefix server
+
+      - name: Extract menu
+        run: node server/scripts/extract-menu.js "https://order-rc.quickclick.cc/tw/food/P_r86vY84ww/"
+
+      - name: Apply to service
+        run: node server/scripts/apply-store.js "server/scripts/out/達利早餐_五股工商店.json" --id daily --keep-meta
+
+      - name: Type check
+        run: npx tsc --noEmit -p tsconfig.app.json
+
+      - name: Open PR if menu changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: auto/menu-daily
+          delete-branch: true
+          add-paths: |
+            src/app/core/services/menu-data.service.ts
+            server/scripts/out/達利早餐_五股工商店.json
+          commit-message: 'chore(menu): 每週自動更新達利菜單'
+          title: 'chore(menu): 每週自動更新達利菜單'
+          body: |
+            由 `update-menu-daily.yml` 每週自動從 quickclick 擷取。
+
+            Merge 前請確認：
+            - 新分類的 emoji（自動猜的，猜不到會是 🍽️）
+            - 品名沒有被切壞、價格合理
