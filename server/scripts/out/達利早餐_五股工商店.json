@@ -30,6 +30,10 @@
           "price": 58
         },
         {
+          "name": "法式薰衣草奶茶(大)",
+          "price": 65
+        },
+        {
           "name": "玫瑰乳酪魚香堡",
           "price": 85
         },
@@ -501,10 +505,6 @@
         {
           "name": "嫩煎雞胸水耕沙拉",
           "price": 130
-        },
-        {
-          "name": "舒肥雞水耕沙拉",
-          "price": 158
         }
       ]
     },
@@ -514,10 +514,6 @@
         {
           "name": "晨光野菇達利碗",
           "price": 145
-        },
-        {
-          "name": "蔥鹽舒肥雞達利碗",
-          "price": 168
         },
         {
           "name": "泰香打拋達利碗",
@@ -779,6 +775,7 @@
   "source": {
     "platform": "quickclick",
     "url": "https://order-rc.quickclick.cc/tw/food/P_r86vY84ww/",
+    "fetchedAt": "2026-11-02",
     "fetchedWith": "extract-menu.js"
   }
 }
