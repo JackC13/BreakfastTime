@@ -12,7 +12,7 @@ export class MenuDataService {
       hours: '平日 06:00-13:30 / 假日 06:00-14:00',
       phone: '02-82927899',
       website: 'https://dailybreakfast.com.tw',
-      menuUpdatedAt: '2026-10-26',
+      menuUpdatedAt: '2026-11-09',
       menu: {
         '🌷 我把達利變花園了': [
           { name: '花園三重奏', price: 188 },
@@ -20,6 +20,7 @@ export class MenuDataService {
           { name: '粉漾麵食組', price: 208 },
           { name: '洋甘菊薰衣草花茶(大)', price: 58 },
           { name: '晨露玫瑰蜜桃茶(大)', price: 58 },
+          { name: '法式薰衣草奶茶(大)', price: 65 },
           { name: '玫瑰乳酪魚香堡', price: 85 },
           { name: '玫瑰青檸迷迭脆雞堡', price: 85 },
           { name: '迷迭香青檸嫩雞歐包', price: 89 },
@@ -27,8 +28,6 @@ export class MenuDataService {
           { name: '粉漾玫瑰白醬烏龍麵', price: 165 },
           { name: '加購-玫瑰乳酪佐脆薯', price: 55 },
           { name: '加購-青檸迷迭醬佐雞塊', price: 49 },
-          { name: '薯餅哥公仔(單隻)', price: 199 },
-          { name: '薯餅哥公仔(六隻)', price: 1189 },
         ],
         '🍽️ 達利集合': [
           { name: '(盤餐)英式圓餐包集合', price: 140 },
