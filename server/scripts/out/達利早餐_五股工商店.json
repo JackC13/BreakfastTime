@@ -30,6 +30,10 @@
           "price": 58
         },
         {
+          "name": "法式薰衣草奶茶(大)",
+          "price": 65
+        },
+        {
           "name": "玫瑰乳酪魚香堡",
           "price": 85
         },
@@ -56,14 +60,6 @@
         {
           "name": "加購-青檸迷迭醬佐雞塊",
           "price": 49
-        },
-        {
-          "name": "薯餅哥公仔(單隻)",
-          "price": 199
-        },
-        {
-          "name": "薯餅哥公仔(六隻)",
-          "price": 1189
         }
       ]
     },
@@ -779,6 +775,7 @@
   "source": {
     "platform": "quickclick",
     "url": "https://order-rc.quickclick.cc/tw/food/P_r86vY84ww/",
+    "fetchedAt": "2026-11-09",
     "fetchedWith": "extract-menu.js"
   }
 }
