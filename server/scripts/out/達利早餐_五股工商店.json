@@ -30,6 +30,10 @@
           "price": 58
         },
         {
+          "name": "法式薰衣草奶茶(大)",
+          "price": 65
+        },
+        {
           "name": "玫瑰乳酪魚香堡",
           "price": 85
         },
@@ -779,6 +783,7 @@
   "source": {
     "platform": "quickclick",
     "url": "https://order-rc.quickclick.cc/tw/food/P_r86vY84ww/",
+    "fetchedAt": "2026-11-16",
     "fetchedWith": "extract-menu.js"
   }
 }
